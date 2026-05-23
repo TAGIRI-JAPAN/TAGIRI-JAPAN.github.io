@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>匠の技術たち | 匠 TAKUMI JAPAN</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Serif+JP:wght@200;300;400&family=Shippori+Mincho:wght@400;500;600;700&family=Hina+Mincho&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #C9A84C; --gold-light: #E8C97A;
+    --black: #0A0A0A; --dark: #111111; --dark2: #1A1A1A;
+    --white: #F5F0E8; --gray: #888880; --border: rgba(201,168,76,0.25);
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: 'Noto Serif JP', serif; font-weight: 300; overflow-x: hidden; cursor: none; }
+
+  .cursor { position: fixed; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); }
+  .cursor-ring { position: fixed; width: 32px; height: 32px; border: 1px solid rgba(201,168,76,0.5); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.12s ease; }
+
+  /* HEADER */
+  header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(10,10,10,0.97); border-bottom: 1px solid var(--border); }
+  .logo { display: flex; flex-direction: column; line-height: 1; text-decoration: none; }
+  .logo-ja { font-size: 24px; font-weight: 400; color: var(--gold); letter-spacing: 0.2em; font-family: 'Hina Mincho', serif; }
+  .logo-en { font-family: 'Bebas Neue', sans-serif; font-size: 10px; letter-spacing: 0.5em; color: var(--gray); margin-top: 2px; }
+  nav { display: flex; gap: 28px; align-items: center; }
+  nav a { font-family: 'Noto Serif JP', serif; font-size: 11px; font-weight: 300; color: var(--gray); text-decoration: none; letter-spacing: 0.1em; transition: color 0.3s; }
+  nav a:hover, nav a.active { color: var(--gold); }
+  .header-cta { padding: 7px 20px; border: 1px solid var(--border); color: var(--gold) !important; font-size: 10px !important; transition: background 0.3s !important; }
+  .header-cta:hover { background: rgba(201,168,76,0.1) !important; }
+
+  /* PAGE HERO */
+  .page-hero { padding: 140px 48px 80px; border-bottom: 1px solid var(--border); background: var(--dark); }
+  .page-hero-inner { max-width: 1200px; margin: 0 auto; }
+  .page-eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 10px; letter-spacing: 0.6em; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+  .page-eyebrow::after { content: ''; width: 40px; height: 1px; background: var(--border); }
+  .page-kanji { font-family: 'Hina Mincho', serif; font-size: 72px; color: rgba(201,168,76,0.12); line-height: 1; margin-bottom: -12px; }
+  .page-title { font-family: 'Shippori Mincho', serif; font-size: clamp(32px, 5vw, 56px); font-weight: 500; color: var(--white); line-height: 1.2; margin-bottom: 16px; }
+  .page-desc { font-size: 13px; color: var(--gray); line-height: 2.2; max-width: 560px; }
+
+  /* SEARCH & FILTER */
+  .filter-bar { background: var(--dark2); border-bottom: 1px solid var(--border); padding: 32px 48px; position: sticky; top: 72px; z-index: 50; }
+  .filter-inner { max-width: 1200px; margin: 0 auto; }
+  .search-wrap { position: relative; margin-bottom: 20px; }
+  .search-wrap input {
+    width: 100%; background: var(--dark); border: 1px solid var(--border); color: var(--white);
+    font-family: 'Noto Serif JP', serif; font-size: 13px; font-weight: 300;
+    padding: 12px 16px 12px 44px; outline: none; transition: border-color 0.3s;
+    letter-spacing: 0.05em;
+  }
+  .search-wrap input::placeholder { color: var(--gray); }
+  .search-wrap input:focus { border-color: var(--gold); }
+  .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 16px; pointer-events: none; }
+
+  .tag-section { margin-bottom: 12px; }
+  .tag-label-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .tag-label { font-family: 'Bebas Neue', sans-serif; font-size: 9px; letter-spacing: 0.5em; color: var(--gray); }
+  .tag-toggle { font-family: 'Bebas Neue', sans-serif; font-size: 9px; letter-spacing: 0.3em; color: var(--gold); background: none; border: none; cursor: pointer; padding: 0; opacity: 0.7; transition: opacity 0.2s; }
+  .tag-toggle:hover { opacity: 1; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tags .tag-extra { display: none; }
+  .tags.expanded .tag-extra { display: inline-flex; }
+  .tag {
+    padding: 3px 10px; border: 1px solid var(--border); font-family: 'Noto Serif JP', serif;
+    font-size: 10px; font-weight: 300; color: var(--gray); cursor: pointer;
+    transition: all 0.2s; letter-spacing: 0.03em; background: transparent;
+    display: inline-flex; align-items: center;
+  }
+  .tag:hover { border-color: var(--gold); color: var(--gold-light); }
+  .tag.active { background: rgba(201,168,76,0.15); border-color: var(--gold); color: var(--gold); }
+
+  .result-count { font-size: 11px; color: var(--gray); letter-spacing: 0.1em; margin-top: 16px; }
+  .result-count span { color: var(--gold); }
+
+  /* ARTICLES GRID */
+  .articles-section { padding: 60px 48px 120px; max-width: 1200px; margin: 0 auto; }
+  .articles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+
+  .article-card {
+    background: var(--dark); padding: 40px 36px; text-decoration: none; color: inherit;
+    display: block; position: relative; overflow: hidden; transition: background 0.3s;
+  }
+  .article-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease;
+  }
+  .article-card:hover { background: var(--dark2); }
+  .article-card:hover::before { transform: scaleX(1); }
+  .article-card.hidden { display: none; }
+
+  .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+  .card-tag {
+    font-family: 'Bebas Neue', sans-serif; font-size: 9px; letter-spacing: 0.4em;
+    padding: 3px 10px; border: 1px solid var(--border); color: var(--gold);
+  }
+  .card-tag.industry { border-color: rgba(201,168,76,0.4); color: var(--gold); }
+  .card-tag.tech { border-color: rgba(100,160,220,0.4); color: #64A0DC; }
+
+  .card-title { font-family: 'Shippori Mincho', serif; font-size: 20px; font-weight: 500; color: var(--white); line-height: 1.5; margin-bottom: 12px; letter-spacing: 0.03em; }
+  .card-company { font-size: 11px; color: var(--gold); letter-spacing: 0.15em; margin-bottom: 14px; font-family: 'Bebas Neue', sans-serif; }
+  .card-excerpt { font-size: 12px; color: var(--gray); line-height: 2; margin-bottom: 24px; }
+  .card-meta { display: flex; justify-content: space-between; align-items: center; }
+  .card-date { font-size: 10px; color: var(--gray); letter-spacing: 0.1em; font-family: 'Bebas Neue', sans-serif; }
+  .card-arrow { font-size: 14px; color: var(--gold); opacity: 0; transform: translateX(-6px); transition: all 0.3s; }
+  .article-card:hover .card-arrow { opacity: 1; transform: translateX(0); }
+
+  /* NO RESULTS */
+  .no-results { display: none; text-align: center; padding: 80px 0; color: var(--gray); font-size: 14px; line-height: 2.4; }
+  .no-results.visible { display: block; }
+  .no-results-kanji { font-family: 'Hina Mincho', serif; font-size: 64px; color: rgba(201,168,76,0.1); margin-bottom: 16px; }
+
+  /* FOOTER */
+  footer { background: var(--black); border-top: 1px solid var(--border); padding: 40px 48px; text-align: center; }
+  footer p { font-size: 11px; color: var(--gray); letter-spacing: 0.1em; }
+  footer a { color: var(--gold); text-decoration: none; font-size: 13px; display: inline-block; margin-bottom: 16px; }
+
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    header { padding: 16px 20px; }
+    nav { display: none; }
+    .page-hero { padding: 110px 20px 60px; }
+    .filter-bar { padding: 24px 20px; }
+    .articles-section { padding: 40px 20px 80px; }
+    .articles-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<header>
+  <a href="index.html" class="logo">
+    <span class="logo-ja">匠</span>
+    <span class="logo-en">TAKUMI JAPAN</span>
+  </a>
+  <nav>
+    <a href="articles.html" class="active">匠の技術たち</a>
+    <a href="pr.html">モノづくりを支える企業たち</a>
+    <a href="recruit.html">採用情報</a>
+    <a href="learn.html">学習コンテンツ</a>
+    <a href="english.html">製造業英語</a>
+    <a href="support.html">発信支援</a>
+    <a href="contact.html" class="header-cta">お問い合わせ</a>
+  </nav>
+</header>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-eyebrow">Craftsmanship Articles</div>
+    <div class="page-kanji">技</div>
+    <h1 class="page-title">匠の技術たち</h1>
+    <p class="page-desc">「こんな加工技術を持つ会社、どこかにないか」——そんな出会いを生む、ものづくりのオンライン展示場。各社が誇る専門技術・設備・こだわりを深く掘り下げ、次の仕事へつながる縁を静かに育てる。</p>
+  </div>
+</div>
+
+<!-- SEARCH & FILTER -->
+<div class="filter-bar">
+  <div class="filter-inner">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="企業名・技術・キーワードで検索..." autocomplete="off">
+    </div>
+      <div class="tag-section">
+        <div class="tag-label-row">
+          <div class="tag-label">業種</div>
+          <button class="tag-toggle" onclick="toggleTags('industryTags', this)">＋ もっと見る</button>
+        </div>
+        <div class="tags" id="industryTags">
+          <button class="tag active" data-type="industry" data-value="all">すべて</button>
+          <button class="tag" data-type="industry" data-value="機械加工">機械加工</button>
+          <button class="tag" data-type="industry" data-value="板金・プレス">板金・プレス</button>
+          <button class="tag" data-type="industry" data-value="溶接・接合">溶接・接合</button>
+          <button class="tag" data-type="industry" data-value="鋳造・鍛造">鋳造・鍛造</button>
+          <button class="tag" data-type="industry" data-value="樹脂・ゴム">樹脂・ゴム</button>
+          <button class="tag" data-type="industry" data-value="電子・半導体">電子・半導体</button>
+          <button class="tag" data-type="industry" data-value="自動車部品">自動車部品</button>
+          <button class="tag" data-type="industry" data-value="航空・宇宙">航空・宇宙</button>
+          <button class="tag" data-type="industry" data-value="医療機器">医療機器</button>
+          <button class="tag" data-type="industry" data-value="食品機械">食品機械</button>
+          <button class="tag tag-extra" data-type="industry" data-value="造船・重工">造船・重工</button>
+          <button class="tag tag-extra" data-type="industry" data-value="建設機械">建設機械</button>
+          <button class="tag tag-extra" data-type="industry" data-value="農業機械">農業機械</button>
+          <button class="tag tag-extra" data-type="industry" data-value="包装機械">包装機械</button>
+          <button class="tag tag-extra" data-type="industry" data-value="繊維・縫製">繊維・縫製</button>
+          <button class="tag tag-extra" data-type="industry" data-value="木工・家具">木工・家具</button>
+          <button class="tag tag-extra" data-type="industry" data-value="紙・印刷">紙・印刷</button>
+          <button class="tag tag-extra" data-type="industry" data-value="化学・塗料">化学・塗料</button>
+          <button class="tag tag-extra" data-type="industry" data-value="ガラス・セラミック">ガラス・セラミック</button>
+          <button class="tag tag-extra" data-type="industry" data-value="金属材料・素材">金属材料・素材</button>
+          <button class="tag tag-extra" data-type="industry" data-value="工具・治具">工具・治具</button>
+          <button class="tag tag-extra" data-type="industry" data-value="計測・検査機器">計測・検査機器</button>
+          <button class="tag tag-extra" data-type="industry" data-value="産業用ロボット">産業用ロボット</button>
+          <button class="tag tag-extra" data-type="industry" data-value="環境・エネルギー">環境・エネルギー</button>
+          <button class="tag tag-extra" data-type="industry" data-value="半導体製造装置">半導体製造装置</button>
+          <button class="tag tag-extra" data-type="industry" data-value="光学・精密機器">光学・精密機器</button>
+          <button class="tag tag-extra" data-type="industry" data-value="電気・制御機器">電気・制御機器</button>
+          <button class="tag tag-extra" data-type="industry" data-value="配管・バルブ">配管・バルブ</button>
+          <button class="tag tag-extra" data-type="industry" data-value="ばね・螺子">ばね・螺子</button>
+          <button class="tag tag-extra" data-type="industry" data-value="空圧・油圧機器">空圧・油圧機器</button>
+          <button class="tag tag-extra" data-type="industry" data-value="搬送・物流機器">搬送・物流機器</button>
+          <button class="tag tag-extra" data-type="industry" data-value="鉄鋼・非鉄金属">鉄鋼・非鉄金属</button>
+          <button class="tag tag-extra" data-type="industry" data-value="射出成形金型">射出成形金型</button>
+          <button class="tag tag-extra" data-type="industry" data-value="プラスチック製品">プラスチック製品</button>
+          <button class="tag tag-extra" data-type="industry" data-value="ゴム製品">ゴム製品</button>
+          <button class="tag tag-extra" data-type="industry" data-value="アルミダイカスト">アルミダイカスト</button>
+          <button class="tag tag-extra" data-type="industry" data-value="鍍金・表面処理">鍍金・表面処理</button>
+          <button class="tag tag-extra" data-type="industry" data-value="熱処理・焼入れ">熱処理・焼入れ</button>
+          <button class="tag tag-extra" data-type="industry" data-value="塗装・コーティング">塗装・コーティング</button>
+          <button class="tag tag-extra" data-type="industry" data-value="産業用電子部品">産業用電子部品</button>
+          <button class="tag tag-extra" data-type="industry" data-value="モーター・アクチュエータ">モーター・アクチュエータ</button>
+          <button class="tag tag-extra" data-type="industry" data-value="センサー・計測">センサー・計測</button>
+          <button class="tag tag-extra" data-type="industry" data-value="試験・評価設備">試験・評価設備</button>
+          <button class="tag tag-extra" data-type="industry" data-value="金型・ダイス">金型・ダイス</button>
+          <button class="tag tag-extra" data-type="industry" data-value="切削工具">切削工具</button>
+          <button class="tag tag-extra" data-type="industry" data-value="研削砥石・研磨材">研削砥石・研磨材</button>
+          <button class="tag tag-extra" data-type="industry" data-value="接着剤・シール材">接着剤・シール材</button>
+          <button class="tag tag-extra" data-type="industry" data-value="潤滑油・切削油">潤滑油・切削油</button>
+          <button class="tag tag-extra" data-type="industry" data-value="産業用ガス">産業用ガス</button>
+          <button class="tag tag-extra" data-type="industry" data-value="クリーンルーム設備">クリーンルーム設備</button>
+          <button class="tag tag-extra" data-type="industry" data-value="廃水・排気処理">廃水・排気処理</button>
+          <button class="tag tag-extra" data-type="industry" data-value="再生可能エネルギー機器">再生可能エネルギー機器</button>
+          <button class="tag tag-extra" data-type="industry" data-value="防衛・セキュリティ機器">防衛・セキュリティ機器</button>
+        </div>
+      </div>
+      <div class="tag-section">
+        <div class="tag-label-row">
+          <div class="tag-label">技術カテゴリ</div>
+          <button class="tag-toggle" onclick="toggleTags('techTags', this)">＋ もっと見る</button>
+        </div>
+        <div class="tags" id="techTags">
+          <button class="tag active" data-type="tech" data-value="all">すべて</button>
+          <button class="tag" data-type="tech" data-value="切削加工">切削加工</button>
+          <button class="tag" data-type="tech" data-value="研削・研磨">研削・研磨</button>
+          <button class="tag" data-type="tech" data-value="溶接">溶接</button>
+          <button class="tag" data-type="tech" data-value="プレス加工">プレス加工</button>
+          <button class="tag" data-type="tech" data-value="板金加工">板金加工</button>
+          <button class="tag" data-type="tech" data-value="射出成形">射出成形</button>
+          <button class="tag" data-type="tech" data-value="表面処理・めっき">表面処理・めっき</button>
+          <button class="tag" data-type="tech" data-value="熱処理">熱処理</button>
+          <button class="tag" data-type="tech" data-value="IoT・DX">IoT・DX</button>
+          <button class="tag" data-type="tech" data-value="品質管理・QC">品質管理・QC</button>
+          <button class="tag tag-extra" data-type="tech" data-value="放電加工">放電加工</button>
+          <button class="tag tag-extra" data-type="tech" data-value="レーザー加工">レーザー加工</button>
+          <button class="tag tag-extra" data-type="tech" data-value="電子ビーム加工">電子ビーム加工</button>
+          <button class="tag tag-extra" data-type="tech" data-value="超音波加工">超音波加工</button>
+          <button class="tag tag-extra" data-type="tech" data-value="ウォータージェット">ウォータージェット</button>
+          <button class="tag tag-extra" data-type="tech" data-value="電解加工">電解加工</button>
+          <button class="tag tag-extra" data-type="tech" data-value="ホーニング">ホーニング</button>
+          <button class="tag tag-extra" data-type="tech" data-value="超精密加工">超精密加工</button>
+          <button class="tag tag-extra" data-type="tech" data-value="マイクロ加工">マイクロ加工</button>
+          <button class="tag tag-extra" data-type="tech" data-value="TIG溶接">TIG溶接</button>
+          <button class="tag tag-extra" data-type="tech" data-value="MIG・MAG溶接">MIG・MAG溶接</button>
+          <button class="tag tag-extra" data-type="tech" data-value="摩擦攪拌接合">摩擦攪拌接合</button>
+          <button class="tag tag-extra" data-type="tech" data-value="電子ビーム溶接">電子ビーム溶接</button>
+          <button class="tag tag-extra" data-type="tech" data-value="ろう付け・はんだ">ろう付け・はんだ</button>
+          <button class="tag tag-extra" data-type="tech" data-value="鋳造">鋳造</button>
+          <button class="tag tag-extra" data-type="tech" data-value="鍛造">鍛造</button>
+          <button class="tag tag-extra" data-type="tech" data-value="粉末冶金・焼結">粉末冶金・焼結</button>
+          <button class="tag tag-extra" data-type="tech" data-value="ダイカスト">ダイカスト</button>
+          <button class="tag tag-extra" data-type="tech" data-value="押出・引抜き">押出・引抜き</button>
+          <button class="tag tag-extra" data-type="tech" data-value="ブロー成形">ブロー成形</button>
+          <button class="tag tag-extra" data-type="tech" data-value="真空成形">真空成形</button>
+          <button class="tag tag-extra" data-type="tech" data-value="複合材料成形">複合材料成形</button>
+          <button class="tag tag-extra" data-type="tech" data-value="3Dプリンティング">3Dプリンティング</button>
+          <button class="tag tag-extra" data-type="tech" data-value="電気めっき">電気めっき</button>
+          <button class="tag tag-extra" data-type="tech" data-value="無電解めっき">無電解めっき</button>
+          <button class="tag tag-extra" data-type="tech" data-value="陽極酸化">陽極酸化</button>
+          <button class="tag tag-extra" data-type="tech" data-value="PVD・CVDコーティング">PVD・CVDコーティング</button>
+          <button class="tag tag-extra" data-type="tech" data-value="塗装・粉体塗装">塗装・粉体塗装</button>
+          <button class="tag tag-extra" data-type="tech" data-value="焼入れ・焼戻し">焼入れ・焼戻し</button>
+          <button class="tag tag-extra" data-type="tech" data-value="浸炭・窒化処理">浸炭・窒化処理</button>
+          <button class="tag tag-extra" data-type="tech" data-value="高周波焼入れ">高周波焼入れ</button>
+          <button class="tag tag-extra" data-type="tech" data-value="精密測定・三次元測定">精密測定・三次元測定</button>
+          <button class="tag tag-extra" data-type="tech" data-value="非破壊検査">非破壊検査</button>
+          <button class="tag tag-extra" data-type="tech" data-value="画像検査・AI検査">画像検査・AI検査</button>
+          <button class="tag tag-extra" data-type="tech" data-value="自動化・ライン構築">自動化・ライン構築</button>
+          <button class="tag tag-extra" data-type="tech" data-value="産業用ロボット活用">産業用ロボット活用</button>
+          <button class="tag tag-extra" data-type="tech" data-value="CAD・CAM設計">CAD・CAM設計</button>
+          <button class="tag tag-extra" data-type="tech" data-value="治具・工具設計">治具・工具設計</button>
+          <button class="tag tag-extra" data-type="tech" data-value="生産管理・IE">生産管理・IE</button>
+          <button class="tag tag-extra" data-type="tech" data-value="組立・配線">組立・配線</button>
+          <button class="tag tag-extra" data-type="tech" data-value="クリーンルーム製造">クリーンルーム製造</button>
+          <button class="tag tag-extra" data-type="tech" data-value="真空・超低温技術">真空・超低温技術</button>
+          <button class="tag tag-extra" data-type="tech" data-value="接着・シール技術">接着・シール技術</button>
+          <button class="tag tag-extra" data-type="tech" data-value="難削材加工">難削材加工</button>
+          <button class="tag tag-extra" data-type="tech" data-value="複合形状加工">複合形状加工</button>
+          <button class="tag tag-extra" data-type="tech" data-value="薄肉加工">薄肉加工</button>
+          <button class="tag tag-extra" data-type="tech" data-value="深穴加工">深穴加工</button>
+          <button class="tag tag-extra" data-type="tech" data-value="歯車加工">歯車加工</button>
+          <button class="tag tag-extra" data-type="tech" data-value="ねじ加工">ねじ加工</button>
+          <button class="tag tag-extra" data-type="tech" data-value="スピニング加工">スピニング加工</button>
+          <button class="tag tag-extra" data-type="tech" data-value="バレル研磨">バレル研磨</button>
+          <button class="tag tag-extra" data-type="tech" data-value="ラッピング・ポリッシング">ラッピング・ポリッシング</button>
+        </div>
+      </div>
+    <div class="result-count" id="resultCount"><span id="countNum">3</span> 件の記事</div>
+  </div>
+</div>
+
+<!-- ARTICLES -->
+<div class="articles-section">
+  <div class="articles-grid" id="articlesGrid">
+
+    <!-- ========================================================
+         ▼▼▼ 記事を追加するときはここにコピペするだけ ▼▼▼
+         data-industry="業種タグ" data-tech="技術タグ" を設定
+         ======================================================== -->
+
+    <a href="article-detail.html" class="article-card reveal"
+       data-industry="機械加工" data-tech="切削加工"
+       data-title="0.001mmの世界に挑む　精密切削加工の匠"
+       data-company="株式会社 田中精機">
+      <div class="card-tags">
+        <span class="card-tag industry">機械加工</span>
+        <span class="card-tag tech">切削加工</span>
+      </div>
+      <h2 class="card-title">0.001mmの世界に挑む<br>精密切削加工の匠</h2>
+      <div class="card-company">株式会社 田中精機</div>
+      <p class="card-excerpt">航空宇宙部品から医療機器まで、マイクロメートル単位の精度を誇る切削技術。創業50年、三代にわたって磨き続けた「勘と技」の物語。</p>
+      <div class="card-meta">
+        <span class="card-date">2026.05.10</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="article-detail.html" class="article-card reveal"
+       data-industry="溶接・接合" data-tech="溶接"
+       data-title="見えない継ぎ目が語る技　超高圧容器溶接の世界"
+       data-company="山本溶接工業 株式会社">
+      <div class="card-tags">
+        <span class="card-tag industry">溶接・接合</span>
+        <span class="card-tag tech">溶接</span>
+      </div>
+      <h2 class="card-title">見えない継ぎ目が語る技<br>超高圧容器溶接の世界</h2>
+      <div class="card-company">山本溶接工業 株式会社</div>
+      <p class="card-excerpt">石油精製プラントに使われる超高圧容器の溶接は、一本のビードが命を左右する。国家資格最難関・特別ボイラー溶接士が語る、溶接の哲学。</p>
+      <div class="card-meta">
+        <span class="card-date">2026.04.28</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="article-detail.html" class="article-card reveal"
+       data-industry="電子・半導体" data-tech="自動化・IoT"
+       data-title="町工場がIoTで変わった　熟練工の勘をデータにした話"
+       data-company="佐藤電子製造 有限会社">
+      <div class="card-tags">
+        <span class="card-tag industry">電子・半導体</span>
+        <span class="card-tag tech">自動化・IoT</span>
+      </div>
+      <h2 class="card-title">町工場がIoTで変わった<br>熟練工の勘をデータにした話</h2>
+      <div class="card-company">佐藤電子製造 有限会社</div>
+      <p class="card-excerpt">従業員12名の小さな工場が、IoTセンサー導入で不良品率を80%削減。「デジタルと職人技は対立しない」と語る2代目社長の挑戦。</p>
+      <div class="card-meta">
+        <span class="card-date">2026.04.15</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <!-- ========================================================
+         ▲▲▲ ここまでが記事エリア ▲▲▲
+         ======================================================== -->
+
+  </div>
+  <div class="no-results" id="noResults">
+    <div class="no-results-kanji">無</div>
+    <p>該当する記事が見つかりませんでした。<br>別のキーワードやタグでお試しください。</p>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html">← 匠 TAKUMI JAPAN トップへ</a>
+  <p>© 2026 匠 TAKUMI JAPAN. All rights reserved.</p>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+    setTimeout(() => { ring.style.left = e.clientX + 'px'; ring.style.top = e.clientY + 'px'; }, 60);
+  });
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { ring.style.width='44px'; ring.style.height='44px'; ring.style.borderColor='rgba(201,168,76,0.8)'; });
+    el.addEventListener('mouseleave', () => { ring.style.width='32px'; ring.style.height='32px'; ring.style.borderColor='rgba(201,168,76,0.5)'; });
+  });
+
+  // Reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 60); observer.unobserve(e.target); } });
+  }, { threshold: 0.05 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Filter & Search
+  let activeIndustry = 'all';
+  let activeTech = 'all';
+  let searchQuery = '';
+
+  const cards = document.querySelectorAll('.article-card');
+  const countEl = document.getElementById('countNum');
+  const noResults = document.getElementById('noResults');
+
+  function filterCards() {
+    let count = 0;
+    cards.forEach(card => {
+      const industry = card.dataset.industry || '';
+      const tech = card.dataset.tech || '';
+      const title = (card.dataset.title || '').toLowerCase();
+      const company = (card.dataset.company || '').toLowerCase();
+      const excerpt = (card.querySelector('.card-excerpt')?.textContent || '').toLowerCase();
+      const q = searchQuery.toLowerCase();
+
+      const matchIndustry = activeIndustry === 'all' || industry === activeIndustry;
+      const matchTech = activeTech === 'all' || tech === activeTech;
+      const matchSearch = !q || title.includes(q) || company.includes(q) || excerpt.includes(q) || industry.includes(q) || tech.includes(q);
+
+      if (matchIndustry && matchTech && matchSearch) {
+        card.classList.remove('hidden'); count++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+    countEl.textContent = count;
+    noResults.classList.toggle('visible', count === 0);
+  }
+
+  // Toggle expand/collapse
+  function toggleTags(id, btn) {
+    const el = document.getElementById(id);
+    const expanded = el.classList.toggle('expanded');
+    btn.textContent = expanded ? '－ 閉じる' : '＋ もっと見る';
+  }
+
+  // Tag click
+  document.querySelectorAll('.tag').forEach(tag => {
+    tag.addEventListener('click', () => {
+      const type = tag.dataset.type;
+      const value = tag.dataset.value;
+      if (type === 'industry') {
+        activeIndustry = value;
+        document.querySelectorAll('[data-type="industry"]').forEach(t => t.classList.remove('active'));
+      } else {
+        activeTech = value;
+        document.querySelectorAll('[data-type="tech"]').forEach(t => t.classList.remove('active'));
+      }
+      tag.classList.add('active');
+      filterCards();
+    });
+  });
+
+  // Search input
+  document.getElementById('searchInput').addEventListener('input', e => {
+    searchQuery = e.target.value;
+    filterCards();
+  });
+</script>
+</body>
+</html>

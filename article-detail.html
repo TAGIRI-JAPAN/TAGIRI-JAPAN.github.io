@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>0.001mmの世界に挑む 精密切削加工の匠 | 匠 TAKUMI JAPAN</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+JP:wght@200;300;400&family=Shippori+Mincho:wght@400;500;600;700&family=Hina+Mincho&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #C9A84C; --gold-light: #E8C97A;
+    --black: #0A0A0A; --dark: #111111; --dark2: #1A1A1A;
+    --white: #F5F0E8; --gray: #888880; --border: rgba(201,168,76,0.25);
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: 'Noto Serif JP', serif; font-weight: 300; overflow-x: hidden; cursor: none; }
+
+  .cursor { position: fixed; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); }
+  .cursor-ring { position: fixed; width: 32px; height: 32px; border: 1px solid rgba(201,168,76,0.5); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.12s ease; }
+
+  header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(10,10,10,0.97); border-bottom: 1px solid var(--border); }
+  .logo { display: flex; flex-direction: column; line-height: 1; text-decoration: none; }
+  .logo-ja { font-size: 24px; font-weight: 400; color: var(--gold); letter-spacing: 0.2em; font-family: 'Hina Mincho', serif; }
+  .logo-en { font-family: 'Bebas Neue', sans-serif; font-size: 10px; letter-spacing: 0.5em; color: var(--gray); margin-top: 2px; }
+  nav { display: flex; gap: 28px; align-items: center; }
+  nav a { font-family: 'Noto Serif JP', serif; font-size: 11px; color: var(--gray); text-decoration: none; letter-spacing: 0.1em; transition: color 0.3s; }
+  nav a:hover, nav a.active { color: var(--gold); }
+  .header-cta { padding: 7px 20px; border: 1px solid var(--border); color: var(--gold) !important; font-size: 10px !important; }
+
+  /* ARTICLE HERO */
+  .article-hero { padding: 130px 48px 60px; background: var(--dark); border-bottom: 1px solid var(--border); }
+  .article-hero-inner { max-width: 800px; margin: 0 auto; }
+  .back-link { display: inline-flex; align-items: center; gap: 8px; font-family: 'Bebas Neue', sans-serif; font-size: 10px; letter-spacing: 0.4em; color: var(--gray); text-decoration: none; margin-bottom: 40px; transition: color 0.3s; }
+  .back-link:hover { color: var(--gold); }
+  .article-tags { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .article-tag { font-family: 'Bebas Neue', sans-serif; font-size: 9px; letter-spacing: 0.4em; padding: 4px 12px; border: 1px solid var(--border); color: var(--gold); }
+  .article-tag.tech { border-color: rgba(100,160,220,0.4); color: #64A0DC; }
+  .article-title { font-family: 'Shippori Mincho', serif; font-size: clamp(28px, 4vw, 48px); font-weight: 500; line-height: 1.4; color: var(--white); margin-bottom: 24px; letter-spacing: 0.03em; }
+  .article-company { font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 0.3em; color: var(--gold); margin-bottom: 8px; }
+  .article-date { font-size: 11px; color: var(--gray); letter-spacing: 0.1em; font-family: 'Bebas Neue', sans-serif; }
+
+  /* ARTICLE BODY */
+  .article-body { max-width: 800px; margin: 0 auto; padding: 80px 48px 120px; }
+
+  .article-lead {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(16px, 2vw, 20px);
+    font-weight: 400;
+    line-height: 2.2;
+    color: rgba(245,240,232,0.85);
+    margin-bottom: 60px;
+    padding-left: 24px;
+    border-left: 2px solid var(--gold);
+  }
+
+  .article-body h2 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(20px, 2.5vw, 26px);
+    font-weight: 500;
+    color: var(--white);
+    margin: 60px 0 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.05em;
+  }
+  .article-body h2::before {
+    content: '—  ';
+    color: var(--gold);
+    font-weight: 300;
+  }
+
+  .article-body p {
+    font-size: 15px;
+    line-height: 2.6;
+    color: rgba(245,240,232,0.75);
+    margin-bottom: 28px;
+    letter-spacing: 0.03em;
+  }
+
+  .article-body strong {
+    color: var(--white);
+    font-weight: 400;
+  }
+
+  /* SPEC BOX */
+  .spec-box {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    padding: 32px 36px;
+    margin: 48px 0;
+  }
+  .spec-box-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.5em;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .spec-table { width: 100%; border-collapse: collapse; }
+  .spec-table tr { border-bottom: 1px solid rgba(201,168,76,0.1); }
+  .spec-table tr:last-child { border-bottom: none; }
+  .spec-table td { padding: 10px 0; font-size: 13px; line-height: 1.8; }
+  .spec-table td:first-child { color: var(--gray); width: 40%; letter-spacing: 0.05em; }
+  .spec-table td:last-child { color: var(--white); }
+
+  /* QUOTE */
+  .article-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(18px, 2.5vw, 24px);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gold-light);
+    line-height: 1.8;
+    text-align: center;
+    padding: 48px 32px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin: 48px 0;
+  }
+
+  /* COMPANY CARD */
+  .company-card {
+    background: var(--dark);
+    border: 1px solid var(--border);
+    padding: 36px;
+    margin-top: 80px;
+  }
+  .company-card-label { font-family: 'Bebas Neue', sans-serif; font-size: 9px; letter-spacing: 0.5em; color: var(--gold); margin-bottom: 16px; }
+  .company-name { font-family: 'Shippori Mincho', serif; font-size: 22px; font-weight: 500; color: var(--white); margin-bottom: 12px; }
+  .company-info { font-size: 12px; color: var(--gray); line-height: 2.2; }
+
+  /* RELATED / BACK */
+  .article-footer { border-top: 1px solid var(--border); padding: 60px 48px; max-width: 800px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+  .btn-back { padding: 14px 32px; border: 1px solid var(--border); color: var(--gold); font-family: 'Noto Serif JP', serif; font-size: 12px; letter-spacing: 0.15em; text-decoration: none; transition: background 0.3s; }
+  .btn-back:hover { background: rgba(201,168,76,0.08); }
+
+  footer { background: var(--black); border-top: 1px solid var(--border); padding: 32px 48px; text-align: center; }
+  footer p { font-size: 11px; color: var(--gray); letter-spacing: 0.1em; }
+
+  @media (max-width: 768px) {
+    header { padding: 16px 20px; }
+    nav { display: none; }
+    .article-hero { padding: 110px 20px 48px; }
+    .article-body { padding: 48px 20px 80px; }
+    .article-footer { padding: 40px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<header>
+  <a href="index.html" class="logo">
+    <span class="logo-ja">匠</span>
+    <span class="logo-en">TAKUMI JAPAN</span>
+  </a>
+  <nav>
+    <a href="articles.html" class="active">匠の技術たち</a>
+    <a href="pr.html">モノづくりを支える企業たち</a>
+    <a href="recruit.html">採用情報</a>
+    <a href="learn.html">学習コンテンツ</a>
+    <a href="english.html">製造業英語</a>
+    <a href="support.html">発信支援</a>
+    <a href="contact.html" class="header-cta">お問い合わせ</a>
+  </nav>
+</header>
+
+<!-- ARTICLE HERO -->
+<div class="article-hero">
+  <div class="article-hero-inner">
+    <a href="articles.html" class="back-link">← 匠の技術たち 一覧へ</a>
+    <div class="article-tags">
+      <span class="article-tag">機械加工</span>
+      <span class="article-tag tech">切削加工</span>
+    </div>
+    <h1 class="article-title">0.001mmの世界に挑む<br>精密切削加工の匠</h1>
+    <div class="article-company">株式会社 田中精機</div>
+    <div class="article-date">2026.05.10</div>
+  </div>
+</div>
+
+<!-- ARTICLE BODY -->
+<!-- =====================================================
+     ▼▼▼ 記事の本文はここを編集するだけ ▼▼▼
+     ===================================================== -->
+<article class="article-body">
+
+  <p class="article-lead">
+    航空機エンジン部品から心臓ペースメーカーの部品まで——田中精機が手がける切削加工の精度は、人間の髪の毛の100分の1以下。その技術は、三代にわたる職人の執念から生まれた。
+  </p>
+
+  <h2>1ミクロンを追いかけた50年</h2>
+  <p>
+    大阪・東大阪市の住宅街に、外観からは想像もつかない精密工場がある。田中精機は1974年の創業以来、<strong>「見えない精度」</strong>を磨き続けてきた。
+  </p>
+  <p>
+    現社長の田中誠一氏（58歳）は言う。「父が旋盤一台でこの工場を始めたとき、精度の基準は1/100mm（10ミクロン）でした。いまうちが日常的に扱うのは1ミクロン以下。それが50年の積み重ねです」。
+  </p>
+
+  <div class="spec-box">
+    <div class="spec-box-title">Technical Specifications</div>
+    <table class="spec-table">
+      <tr><td>主要設備</td><td>5軸マシニングセンター × 8台、精密旋盤 × 12台</td></tr>
+      <tr><td>加工精度</td><td>寸法精度 ±0.001mm、面粗さ Ra0.1μm</td></tr>
+      <tr><td>対応素材</td><td>チタン、インコネル、ステンレス、アルミ合金、エンプラ</td></tr>
+      <tr><td>主要取引先業種</td><td>航空宇宙、医療機器、半導体製造装置</td></tr>
+      <tr><td>品質認証</td><td>ISO 9001、AS9100D（航空宇宙品質）</td></tr>
+    </table>
+  </div>
+
+  <h2>熟練工の「感覚」をデータにする</h2>
+  <p>
+    精密切削で最も難しいのは、工具の摩耗管理だという。「0.001mm削りすぎれば不良品。でも切削中に工具が少しずつ摩耗していく。熟練工はその変化を音と振動で感じ取る」と田中社長。
+  </p>
+  <p>
+    現在、田中精機ではその<strong>「熟練工の感覚」をAIで再現する取り組み</strong>を進めている。加速度センサーと音響センサーを組み合わせ、工具摩耗をリアルタイムで予測するシステムを独自開発中だ。
+  </p>
+
+  <blockquote class="article-quote">
+    "技術は継承するものではなく、進化させるもの。<br>職人の勘とデータは、対立しない。"
+  </blockquote>
+
+  <h2>どんな依頼に応えられるか</h2>
+  <p>
+    田中精機が特に強みを持つのは、<strong>難削材の複合形状加工</strong>だ。チタンやインコネルといった航空宇宙素材は、加工中に熱が発生しやすく、一般的な工場では対応が難しい。「断られた仕事を持ち込んでくるお客様が多い」と田中社長は笑う。
+  </p>
+  <p>
+    試作から量産まで対応しており、最小ロット1個からの受注も可能。図面持ち込みでの見積もりは通常3営業日以内に回答している。
+  </p>
+
+  <div class="company-card">
+    <div class="company-card-label">Company Profile</div>
+    <div class="company-name">株式会社 田中精機</div>
+    <div class="company-info">
+      所在地：大阪府東大阪市〇〇町1-2-3<br>
+      設立：1974年（創業50年）<br>
+      従業員数：45名<br>
+      得意分野：精密切削加工、難削材加工、複合形状加工<br>
+      お問い合わせ：contact@tanaka-seiki.example.com
+    </div>
+  </div>
+
+</article>
+<!-- =====================================================
+     ▲▲▲ 記事本文ここまで ▲▲▲
+     ===================================================== -->
+
+<div class="article-footer">
+  <a href="articles.html" class="btn-back">← 記事一覧に戻る</a>
+  <span style="font-size:11px;color:var(--gray);letter-spacing:0.1em;">匠 TAKUMI JAPAN</span>
+</div>
+
+<footer>
+  <p>© 2026 匠 TAKUMI JAPAN. All rights reserved.</p>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX+'px'; cursor.style.top = e.clientY+'px';
+    setTimeout(() => { ring.style.left = e.clientX+'px'; ring.style.top = e.clientY+'px'; }, 60);
+  });
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { ring.style.width='44px'; ring.style.height='44px'; });
+    el.addEventListener('mouseleave', () => { ring.style.width='32px'; ring.style.height='32px'; });
+  });
+</script>
+</body>
+</html>
