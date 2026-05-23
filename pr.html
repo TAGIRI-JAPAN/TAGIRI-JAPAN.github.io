@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>モノづくりを支える企業たち | 匠 TAKUMI JAPAN</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Serif+JP:wght@200;300;400&family=Shippori+Mincho:wght@400;500;600;700&family=Hina+Mincho&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #C9A84C; --gold-light: #E8C97A;
+    --black: #0A0A0A; --dark: #111111; --dark2: #1A1A1A;
+    --white: #F5F0E8; --gray: #888880; --border: rgba(201,168,76,0.25);
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: 'Noto Serif JP', serif; font-weight: 300; overflow-x: hidden; cursor: none; }
+
+  .cursor { position: fixed; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); }
+  .cursor-ring { position: fixed; width: 32px; height: 32px; border: 1px solid rgba(201,168,76,0.5); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.12s ease; }
+
+  header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(10,10,10,0.97); border-bottom: 1px solid var(--border); }
+  .logo { display: flex; flex-direction: column; line-height: 1; text-decoration: none; }
+  .logo-ja { font-size: 24px; font-weight: 400; color: var(--gold); letter-spacing: 0.2em; font-family: 'Hina Mincho', serif; }
+  .logo-en { font-family: 'Bebas Neue', sans-serif; font-size: 10px; letter-spacing: 0.5em; color: var(--gray); margin-top: 2px; }
+  nav { display: flex; gap: 28px; align-items: center; }
+  nav a { font-family: 'Noto Serif JP', serif; font-size: 11px; font-weight: 300; color: var(--gray); text-decoration: none; letter-spacing: 0.1em; transition: color 0.3s; }
+  nav a:hover, nav a.active { color: var(--gold); }
+  .header-cta { padding: 7px 20px; border: 1px solid var(--border); color: var(--gold) !important; font-size: 10px !important; transition: background 0.3s !important; }
+  .header-cta:hover { background: rgba(201,168,76,0.1) !important; }
+
+  .page-hero { padding: 140px 48px 80px; border-bottom: 1px solid var(--border); background: var(--dark); }
+  .page-hero-inner { max-width: 1200px; margin: 0 auto; }
+  .page-eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 10px; letter-spacing: 0.6em; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+  .page-eyebrow::after { content: ''; width: 40px; height: 1px; background: var(--border); }
+  .page-kanji { font-family: 'Hina Mincho', serif; font-size: 72px; color: rgba(201,168,76,0.12); line-height: 1; margin-bottom: -12px; }
+  .page-title { font-family: 'Shippori Mincho', serif; font-size: clamp(28px, 4.5vw, 52px); font-weight: 500; color: var(--white); line-height: 1.2; margin-bottom: 16px; }
+  .page-desc { font-size: 13px; color: var(--gray); line-height: 2.2; max-width: 560px; }
+
+  .filter-bar { background: var(--dark2); border-bottom: 1px solid var(--border); padding: 28px 48px; position: sticky; top: 72px; z-index: 50; }
+  .filter-inner { max-width: 1200px; margin: 0 auto; }
+  .search-wrap { position: relative; margin-bottom: 18px; }
+  .search-wrap input { width: 100%; background: var(--dark); border: 1px solid var(--border); color: var(--white); font-family: 'Noto Serif JP', serif; font-size: 13px; font-weight: 300; padding: 11px 16px 11px 42px; outline: none; transition: border-color 0.3s; letter-spacing: 0.05em; }
+  .search-wrap input::placeholder { color: var(--gray); }
+  .search-wrap input:focus { border-color: var(--gold); }
+  .search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 15px; pointer-events: none; }
+
+  .filter-row { margin-bottom: 14px; }
+  .filter-label-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+  .filter-label { font-family: 'Bebas Neue', sans-serif; font-size: 9px; letter-spacing: 0.5em; color: var(--gray); }
+  .multi-note { font-size: 9px; color: var(--gray); opacity: 0.55; letter-spacing: 0.05em; }
+  .tag-toggle { font-family: 'Bebas Neue', sans-serif; font-size: 9px; letter-spacing: 0.3em; color: var(--gold); background: none; border: none; cursor: pointer; padding: 0; opacity: 0.7; transition: opacity 0.2s; }
+  .tag-toggle:hover { opacity: 1; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tags .tag-extra { display: none; }
+  .tags.expanded .tag-extra { display: inline-flex; }
+  .tag { padding: 3px 10px; border: 1px solid var(--border); font-family: 'Noto Serif JP', serif; font-size: 10px; font-weight: 300; color: var(--gray); cursor: pointer; transition: all 0.2s; letter-spacing: 0.03em; background: transparent; display: inline-flex; align-items: center; user-select: none; }
+  .tag:hover { border-color: var(--gold); color: var(--gold-light); }
+  .tag.active { background: rgba(201,168,76,0.15); border-color: var(--gold); color: var(--gold); }
+
+  .filter-actions { display: flex; align-items: center; gap: 16px; margin-top: 14px; }
+  .result-count { font-size: 11px; color: var(--gray); letter-spacing: 0.1em; }
+  .result-count span { color: var(--gold); }
+  .reset-btn { font-family: 'Bebas Neue', sans-serif; font-size: 9px; letter-spacing: 0.3em; color: var(--gray); background: none; border: 1px solid var(--border); padding: 4px 12px; cursor: pointer; transition: all 0.2s; }
+  .reset-btn:hover { color: var(--gold); border-color: var(--gold); }
+
+  .companies-section { padding: 48px 48px 120px; max-width: 1200px; margin: 0 auto; }
+  .companies-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+
+  .company-card { background: var(--dark); padding: 36px 32px; text-decoration: none; color: inherit; display: block; position: relative; overflow: hidden; transition: background 0.3s; }
+  .company-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
+  .company-card:hover { background: var(--dark2); }
+  .company-card:hover::before { transform: scaleX(1); }
+  .company-card.hidden { display: none; }
+
+  .card-name { font-family: 'Shippori Mincho', serif; font-size: 18px; font-weight: 500; color: var(--white); line-height: 1.4; letter-spacing: 0.03em; margin-bottom: 4px; }
+  .card-pref { font-family: 'Bebas Neue', sans-serif; font-size: 10px; letter-spacing: 0.3em; color: var(--gold); margin-bottom: 14px; }
+  .card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 14px; }
+  .card-tag { font-family: 'Bebas Neue', sans-serif; font-size: 8px; letter-spacing: 0.3em; padding: 2px 8px; border: 1px solid rgba(100,160,220,0.35); color: #64A0DC; }
+  .card-desc { font-size: 12px; color: var(--gray); line-height: 2; margin-bottom: 20px; }
+  .card-footer { display: flex; justify-content: space-between; align-items: center; }
+  .card-url { font-size: 10px; color: var(--gray); opacity: 0.6; }
+  .card-arrow { font-size: 14px; color: var(--gold); opacity: 0; transform: translateX(-6px); transition: all 0.3s; }
+  .company-card:hover .card-arrow { opacity: 1; transform: translateX(0); }
+
+  .no-results { display: none; text-align: center; padding: 80px 0; color: var(--gray); font-size: 14px; line-height: 2.4; }
+  .no-results.visible { display: block; }
+  .no-results-kanji { font-family: 'Hina Mincho', serif; font-size: 64px; color: rgba(201,168,76,0.1); margin-bottom: 16px; }
+
+  footer { background: var(--black); border-top: 1px solid var(--border); padding: 40px 48px; text-align: center; }
+  footer p { font-size: 11px; color: var(--gray); letter-spacing: 0.1em; }
+  footer a { color: var(--gold); text-decoration: none; font-size: 13px; display: inline-block; margin-bottom: 16px; }
+
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    header { padding: 16px 20px; }
+    nav { display: none; }
+    .page-hero { padding: 110px 20px 60px; }
+    .filter-bar { padding: 20px; top: 64px; }
+    .companies-section { padding: 32px 20px 80px; }
+    .companies-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<header>
+  <a href="index.html" class="logo">
+    <span class="logo-ja">匠</span>
+    <span class="logo-en">TAKUMI JAPAN</span>
+  </a>
+  <nav>
+    <a href="articles.html">匠の技術たち</a>
+    <a href="pr.html" class="active">モノづくりを支える企業たち</a>
+    <a href="recruit.html">採用情報</a>
+    <a href="learn.html">学習コンテンツ</a>
+    <a href="english.html">製造業英語</a>
+    <a href="support.html">発信支援</a>
+    <a href="contact.html" class="header-cta">お問い合わせ</a>
+  </nav>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-eyebrow">Supporting Partners</div>
+    <div class="page-kanji">縁</div>
+    <h1 class="page-title">モノづくりを支える企業たち</h1>
+    <p class="page-desc">製造業に寄り添い、共に歩む企業・サービスの紹介。素材・設備・IT・物流など、ものづくりの現場を支えるパートナーたちを探す。</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-inner">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="企業名・サービス・キーワードで検索..." autocomplete="off">
+    </div>
+
+    <!-- サービス群（複数選択） -->
+    <div class="filter-row">
+      <div class="filter-label-row">
+        <div class="filter-label">サービス群</div>
+        <span class="multi-note">複数選択可</span>
+        <button class="tag-toggle" onclick="toggleTags('serviceTags', this)">＋ もっと見る</button>
+      </div>
+      <div class="tags" id="serviceTags">
+        <button class="tag active" data-type="service" data-value="all">すべて</button>
+        <button class="tag" data-type="service" data-value="素材・材料供給">素材・材料供給</button>
+        <button class="tag" data-type="service" data-value="工作機械・設備販売">工作機械・設備販売</button>
+        <button class="tag" data-type="service" data-value="IT・システム開発">IT・システム開発</button>
+        <button class="tag" data-type="service" data-value="物流・搬送">物流・搬送</button>
+        <button class="tag" data-type="service" data-value="品質・検査支援">品質・検査支援</button>
+        <button class="tag" data-type="service" data-value="人材・採用支援">人材・採用支援</button>
+        <button class="tag" data-type="service" data-value="設備保全・メンテ">設備保全・メンテ</button>
+        <button class="tag" data-type="service" data-value="ロボット・自動化">ロボット・自動化</button>
+        <button class="tag" data-type="service" data-value="IoT・DX推進">IoT・DX推進</button>
+        <button class="tag" data-type="service" data-value="環境・廃棄物処理">環境・廃棄物処理</button>
+        <!-- 展開時 -->
+        <button class="tag tag-extra" data-type="service" data-value="切削工具・消耗品">切削工具・消耗品</button>
+        <button class="tag tag-extra" data-type="service" data-value="研削砥石・研磨材">研削砥石・研磨材</button>
+        <button class="tag tag-extra" data-type="service" data-value="治具・工具製作">治具・工具製作</button>
+        <button class="tag tag-extra" data-type="service" data-value="金型・ダイス製作">金型・ダイス製作</button>
+        <button class="tag tag-extra" data-type="service" data-value="CAD・CAMソフト">CAD・CAMソフト</button>
+        <button class="tag tag-extra" data-type="service" data-value="MES・ERPシステム">MES・ERPシステム</button>
+        <button class="tag tag-extra" data-type="service" data-value="生産管理システム">生産管理システム</button>
+        <button class="tag tag-extra" data-type="service" data-value="IoTセンサー・計測">IoTセンサー・計測</button>
+        <button class="tag tag-extra" data-type="service" data-value="画像検査・AI検査">画像検査・AI検査</button>
+        <button class="tag tag-extra" data-type="service" data-value="非破壊検査受託">非破壊検査受託</button>
+        <button class="tag tag-extra" data-type="service" data-value="試験・評価受託">試験・評価受託</button>
+        <button class="tag tag-extra" data-type="service" data-value="計量・校正サービス">計量・校正サービス</button>
+        <button class="tag tag-extra" data-type="service" data-value="潤滑油・切削油">潤滑油・切削油</button>
+        <button class="tag tag-extra" data-type="service" data-value="産業用ガス">産業用ガス</button>
+        <button class="tag tag-extra" data-type="service" data-value="塗料・接着剤">塗料・接着剤</button>
+        <button class="tag tag-extra" data-type="service" data-value="梱包・包装資材">梱包・包装資材</button>
+        <button class="tag tag-extra" data-type="service" data-value="安全・防護用品">安全・防護用品</button>
+        <button class="tag tag-extra" data-type="service" data-value="作業環境改善">作業環境改善</button>
+        <button class="tag tag-extra" data-type="service" data-value="省エネ・設備診断">省エネ・設備診断</button>
+        <button class="tag tag-extra" data-type="service" data-value="電気・制御設計">電気・制御設計</button>
+        <button class="tag tag-extra" data-type="service" data-value="配管・空調設備">配管・空調設備</button>
+        <button class="tag tag-extra" data-type="service" data-value="クリーンルーム設備">クリーンルーム設備</button>
+        <button class="tag tag-extra" data-type="service" data-value="産業廃棄物処理">産業廃棄物処理</button>
+        <button class="tag tag-extra" data-type="service" data-value="技術者教育・研修">技術者教育・研修</button>
+        <button class="tag tag-extra" data-type="service" data-value="技能実習・特定技能">技能実習・特定技能</button>
+        <button class="tag tag-extra" data-type="service" data-value="金融・リース">金融・リース</button>
+        <button class="tag tag-extra" data-type="service" data-value="補助金・助成金支援">補助金・助成金支援</button>
+        <button class="tag tag-extra" data-type="service" data-value="特許・知財支援">特許・知財支援</button>
+        <button class="tag tag-extra" data-type="service" data-value="海外展開支援">海外展開支援</button>
+        <button class="tag tag-extra" data-type="service" data-value="M&A・事業承継">M&A・事業承継</button>
+        <button class="tag tag-extra" data-type="service" data-value="Webマーケティング">Webマーケティング</button>
+        <button class="tag tag-extra" data-type="service" data-value="動画・コンテンツ制作">動画・コンテンツ制作</button>
+        <button class="tag tag-extra" data-type="service" data-value="展示会・イベント支援">展示会・イベント支援</button>
+        <button class="tag tag-extra" data-type="service" data-value="3Dプリンター・試作">3Dプリンター・試作</button>
+        <button class="tag tag-extra" data-type="service" data-value="BIM・デジタルツイン">BIM・デジタルツイン</button>
+      </div>
+    </div>
+
+    <!-- エリア（都道府県・複数選択） -->
+    <div class="filter-row">
+      <div class="filter-label-row">
+        <div class="filter-label">エリア</div>
+        <span class="multi-note">複数選択可</span>
+        <button class="tag-toggle" onclick="toggleTags('areaTags', this)">＋ もっと見る</button>
+      </div>
+      <div class="tags" id="areaTags">
+        <button class="tag active" data-type="area" data-value="all">すべて</button>
+        <button class="tag" data-type="area" data-value="北海道">北海道</button>
+        <button class="tag" data-type="area" data-value="東京都">東京</button>
+        <button class="tag" data-type="area" data-value="神奈川県">神奈川</button>
+        <button class="tag" data-type="area" data-value="愛知県">愛知</button>
+        <button class="tag" data-type="area" data-value="大阪府">大阪</button>
+        <button class="tag" data-type="area" data-value="兵庫県">兵庫</button>
+        <button class="tag" data-type="area" data-value="福岡県">福岡</button>
+        <button class="tag" data-type="area" data-value="宮城県">宮城</button>
+        <button class="tag" data-type="area" data-value="広島県">広島</button>
+        <button class="tag" data-type="area" data-value="静岡県">静岡</button>
+        <button class="tag tag-extra" data-type="area" data-value="青森県">青森</button>
+        <button class="tag tag-extra" data-type="area" data-value="岩手県">岩手</button>
+        <button class="tag tag-extra" data-type="area" data-value="秋田県">秋田</button>
+        <button class="tag tag-extra" data-type="area" data-value="山形県">山形</button>
+        <button class="tag tag-extra" data-type="area" data-value="福島県">福島</button>
+        <button class="tag tag-extra" data-type="area" data-value="茨城県">茨城</button>
+        <button class="tag tag-extra" data-type="area" data-value="栃木県">栃木</button>
+        <button class="tag tag-extra" data-type="area" data-value="群馬県">群馬</button>
+        <button class="tag tag-extra" data-type="area" data-value="埼玉県">埼玉</button>
+        <button class="tag tag-extra" data-type="area" data-value="千葉県">千葉</button>
+        <button class="tag tag-extra" data-type="area" data-value="新潟県">新潟</button>
+        <button class="tag tag-extra" data-type="area" data-value="富山県">富山</button>
+        <button class="tag tag-extra" data-type="area" data-value="石川県">石川</button>
+        <button class="tag tag-extra" data-type="area" data-value="福井県">福井</button>
+        <button class="tag tag-extra" data-type="area" data-value="山梨県">山梨</button>
+        <button class="tag tag-extra" data-type="area" data-value="長野県">長野</button>
+        <button class="tag tag-extra" data-type="area" data-value="岐阜県">岐阜</button>
+        <button class="tag tag-extra" data-type="area" data-value="三重県">三重</button>
+        <button class="tag tag-extra" data-type="area" data-value="滋賀県">滋賀</button>
+        <button class="tag tag-extra" data-type="area" data-value="京都府">京都</button>
+        <button class="tag tag-extra" data-type="area" data-value="奈良県">奈良</button>
+        <button class="tag tag-extra" data-type="area" data-value="和歌山県">和歌山</button>
+        <button class="tag tag-extra" data-type="area" data-value="鳥取県">鳥取</button>
+        <button class="tag tag-extra" data-type="area" data-value="島根県">島根</button>
+        <button class="tag tag-extra" data-type="area" data-value="岡山県">岡山</button>
+        <button class="tag tag-extra" data-type="area" data-value="山口県">山口</button>
+        <button class="tag tag-extra" data-type="area" data-value="徳島県">徳島</button>
+        <button class="tag tag-extra" data-type="area" data-value="香川県">香川</button>
+        <button class="tag tag-extra" data-type="area" data-value="愛媛県">愛媛</button>
+        <button class="tag tag-extra" data-type="area" data-value="高知県">高知</button>
+        <button class="tag tag-extra" data-type="area" data-value="佐賀県">佐賀</button>
+        <button class="tag tag-extra" data-type="area" data-value="長崎県">長崎</button>
+        <button class="tag tag-extra" data-type="area" data-value="熊本県">熊本</button>
+        <button class="tag tag-extra" data-type="area" data-value="大分県">大分</button>
+        <button class="tag tag-extra" data-type="area" data-value="宮崎県">宮崎</button>
+        <button class="tag tag-extra" data-type="area" data-value="鹿児島県">鹿児島</button>
+        <button class="tag tag-extra" data-type="area" data-value="沖縄県">沖縄</button>
+      </div>
+    </div>
+
+    <div class="filter-actions">
+      <div class="result-count"><span id="countNum">3</span> 件の企業</div>
+      <button class="reset-btn" onclick="resetAll()">リセット</button>
+    </div>
+  </div>
+</div>
+
+<div class="companies-section">
+  <div class="companies-grid" id="companiesGrid">
+
+    <!-- ========================================================
+         ▼▼▼ 企業を追加するときはここにコピペするだけ ▼▼▼
+         data-area="都道府県" data-service="サービス1,サービス2"
+         ======================================================== -->
+
+    <a href="#" class="company-card reveal"
+       data-area="愛知県"
+       data-service="工作機械・設備販売,設備保全・メンテ">
+      <div class="card-name">株式会社 山田工機</div>
+      <div class="card-pref">愛知県</div>
+      <div class="card-tags">
+        <span class="card-tag">工作機械・設備販売</span>
+        <span class="card-tag">設備保全・メンテ</span>
+      </div>
+      <p class="card-desc">製造業向け5軸マシニングセンターの販売・保守を手がける専門商社。導入から立ち上げ、アフターフォローまで一貫サポート。</p>
+      <div class="card-footer">
+        <span class="card-url">yamada-koki.example.com</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="#" class="company-card reveal"
+       data-area="東京都"
+       data-service="IT・システム開発,MES・ERPシステム,IoTセンサー・計測">
+      <div class="card-name">テクノファクトリー株式会社</div>
+      <div class="card-pref">東京都</div>
+      <div class="card-tags">
+        <span class="card-tag">IT・システム開発</span>
+        <span class="card-tag">MES・ERPシステム</span>
+        <span class="card-tag">IoTセンサー・計測</span>
+      </div>
+      <p class="card-desc">製造業専門のMES／ERPシステム開発会社。中小製造業向けに低コストで導入できるクラウド型生産管理システムを提供。</p>
+      <div class="card-footer">
+        <span class="card-url">techno-factory.example.com</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <a href="#" class="company-card reveal"
+       data-area="大阪府"
+       data-service="素材・材料供給">
+      <div class="card-name">関西特殊鋼材 株式会社</div>
+      <div class="card-pref">大阪府</div>
+      <div class="card-tags">
+        <span class="card-tag">素材・材料供給</span>
+      </div>
+      <p class="card-desc">特殊鋼・ステンレス・チタンなど難削材の専門商社。小ロット・短納期対応で試作から量産まで柔軟に供給。在庫品目3,000種以上。</p>
+      <div class="card-footer">
+        <span class="card-url">kansai-steel.example.com</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <!-- ========================================================
+         ▲▲▲ ここまでが企業エリア ▲▲▲
+         ======================================================== -->
+
+  </div>
+  <div class="no-results" id="noResults">
+    <div class="no-results-kanji">無</div>
+    <p>該当する企業が見つかりませんでした。<br>条件を変えてお試しください。</p>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html">← 匠 TAKUMI JAPAN トップへ</a>
+  <p>© 2026 匠 TAKUMI JAPAN. All rights reserved.</p>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX+'px'; cursor.style.top = e.clientY+'px';
+    setTimeout(() => { ring.style.left = e.clientX+'px'; ring.style.top = e.clientY+'px'; }, 60);
+  });
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { ring.style.width='44px'; ring.style.height='44px'; ring.style.borderColor='rgba(201,168,76,0.8)'; });
+    el.addEventListener('mouseleave', () => { ring.style.width='32px'; ring.style.height='32px'; ring.style.borderColor='rgba(201,168,76,0.5)'; });
+  });
+
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e,i) => { if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),i*60); obs.unobserve(e.target); } });
+  }, { threshold: 0.05 });
+  reveals.forEach(el => obs.observe(el));
+
+  function toggleTags(id, btn) {
+    const el = document.getElementById(id);
+    const expanded = el.classList.toggle('expanded');
+    btn.textContent = expanded ? '－ 閉じる' : '＋ もっと見る';
+  }
+
+  // 両方とも複数選択
+  let activeServices = new Set();
+  let activeAreas = new Set();
+
+  const cards = document.querySelectorAll('.company-card');
+  const countEl = document.getElementById('countNum');
+  const noResults = document.getElementById('noResults');
+
+  function filterCards() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    let count = 0;
+    cards.forEach(card => {
+      const area = card.dataset.area || '';
+      const services = (card.dataset.service || '').split(',').map(s => s.trim());
+      const name = (card.querySelector('.card-name')?.textContent || '').toLowerCase();
+      const desc = (card.querySelector('.card-desc')?.textContent || '').toLowerCase();
+
+      const mArea = activeAreas.size === 0 || activeAreas.has(area);
+      const mSvc = activeServices.size === 0 || services.some(s => activeServices.has(s));
+      const mQ = !q || name.includes(q) || desc.includes(q) || area.includes(q) || services.join(' ').toLowerCase().includes(q);
+
+      const show = mArea && mSvc && mQ;
+      card.classList.toggle('hidden', !show);
+      if(show) count++;
+    });
+    countEl.textContent = count;
+    noResults.classList.toggle('visible', count === 0);
+  }
+
+  function setupMultiSelect(containerId, activeSet) {
+    document.getElementById(containerId).querySelectorAll('.tag').forEach(tag => {
+      tag.addEventListener('click', () => {
+        const val = tag.dataset.value;
+        const allBtn = document.getElementById(containerId).querySelector('[data-value="all"]');
+        if(val === 'all') {
+          activeSet.clear();
+          document.getElementById(containerId).querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+          allBtn.classList.add('active');
+        } else {
+          allBtn.classList.remove('active');
+          if(activeSet.has(val)) {
+            activeSet.delete(val);
+            tag.classList.remove('active');
+          } else {
+            activeSet.add(val);
+            tag.classList.add('active');
+          }
+          if(activeSet.size === 0) allBtn.classList.add('active');
+        }
+        filterCards();
+      });
+    });
+  }
+
+  setupMultiSelect('serviceTags', activeServices);
+  setupMultiSelect('areaTags', activeAreas);
+  document.getElementById('searchInput').addEventListener('input', filterCards);
+
+  function resetAll() {
+    activeServices.clear();
+    activeAreas.clear();
+    document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+    document.getElementById('serviceTags').querySelector('[data-value="all"]').classList.add('active');
+    document.getElementById('areaTags').querySelector('[data-value="all"]').classList.add('active');
+    document.getElementById('searchInput').value = '';
+    filterCards();
+  }
+</script>
+</body>
+</html>
