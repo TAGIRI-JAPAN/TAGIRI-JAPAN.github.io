@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>採用情報 | 匠 TAKUMI JAPAN</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Serif+JP:wght@200;300;400&family=Shippori+Mincho:wght@400;500;600;700&family=Hina+Mincho&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --gold: #C9A84C; --gold-light: #E8C97A;
+    --black: #0A0A0A; --dark: #111111; --dark2: #1A1A1A;
+    --white: #F5F0E8; --gray: #888880; --border: rgba(201,168,76,0.25);
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: 'Noto Serif JP', serif; font-weight: 300; overflow-x: hidden; cursor: none; }
+  .cursor { position: fixed; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); }
+  .cursor-ring { position: fixed; width: 32px; height: 32px; border: 1px solid rgba(201,168,76,0.5); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all 0.12s ease; }
+
+  header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(10,10,10,0.97); border-bottom: 1px solid var(--border); }
+  .logo { display: flex; flex-direction: column; line-height: 1; text-decoration: none; }
+  .logo-ja { font-size: 24px; font-weight: 400; color: var(--gold); letter-spacing: 0.2em; font-family: 'Hina Mincho', serif; }
+  .logo-en { font-family: 'Bebas Neue', sans-serif; font-size: 10px; letter-spacing: 0.5em; color: var(--gray); margin-top: 2px; }
+  nav { display: flex; gap: 28px; align-items: center; }
+  nav a { font-family: 'Noto Serif JP', serif; font-size: 11px; font-weight: 300; color: var(--gray); text-decoration: none; letter-spacing: 0.1em; transition: color 0.3s; }
+  nav a:hover, nav a.active { color: var(--gold); }
+  .header-cta { padding: 7px 20px; border: 1px solid var(--border); color: var(--gold) !important; font-size: 10px !important; }
+  .header-cta:hover { background: rgba(201,168,76,0.1) !important; }
+
+  .page-hero { padding: 140px 48px 80px; border-bottom: 1px solid var(--border); background: var(--dark); }
+  .page-hero-inner { max-width: 1200px; margin: 0 auto; }
+  .page-eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 10px; letter-spacing: 0.6em; color: var(--gold); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+  .page-eyebrow::after { content: ''; width: 40px; height: 1px; background: var(--border); }
+  .page-kanji { font-family: 'Hina Mincho', serif; font-size: 72px; color: rgba(201,168,76,0.12); line-height: 1; margin-bottom: -12px; }
+  .page-title { font-family: 'Shippori Mincho', serif; font-size: clamp(28px, 4.5vw, 52px); font-weight: 500; color: var(--white); line-height: 1.2; margin-bottom: 16px; }
+  .page-desc { font-size: 13px; color: var(--gray); line-height: 2.2; max-width: 560px; }
+
+  /* FILTER */
+  .filter-bar { background: var(--dark2); border-bottom: 1px solid var(--border); padding: 24px 48px; position: sticky; top: 72px; z-index: 50; }
+  .filter-inner { max-width: 1200px; margin: 0 auto; }
+  .search-wrap { position: relative; margin-bottom: 16px; }
+  .search-wrap input { width: 100%; background: var(--dark); border: 1px solid var(--border); color: var(--white); font-family: 'Noto Serif JP', serif; font-size: 13px; font-weight: 300; padding: 11px 16px 11px 42px; outline: none; transition: border-color 0.3s; }
+  .search-wrap input::placeholder { color: var(--gray); }
+  .search-wrap input:focus { border-color: var(--gold); }
+  .search-icon { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 15px; pointer-events: none; }
+
+  .filter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-bottom: 14px; }
+  .filter-group { }
+  .filter-label-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .filter-label { font-family: 'Bebas Neue', sans-serif; font-size: 9px; letter-spacing: 0.5em; color: var(--gray); }
+  .multi-note { font-size: 8px; color: var(--gray); opacity: 0.55; }
+  .tag-toggle { font-family: 'Bebas Neue', sans-serif; font-size: 8px; letter-spacing: 0.3em; color: var(--gold); background: none; border: none; cursor: pointer; padding: 0; opacity: 0.7; }
+  .tag-toggle:hover { opacity: 1; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tags .tag-extra { display: none; }
+  .tags.expanded .tag-extra { display: inline-flex; }
+  .tag { padding: 2px 9px; border: 1px solid var(--border); font-family: 'Noto Serif JP', serif; font-size: 10px; font-weight: 300; color: var(--gray); cursor: pointer; transition: all 0.2s; background: transparent; display: inline-flex; align-items: center; user-select: none; }
+  .tag:hover { border-color: var(--gold); color: var(--gold-light); }
+  .tag.active { background: rgba(201,168,76,0.15); border-color: var(--gold); color: var(--gold); }
+
+  .filter-actions { display: flex; align-items: center; gap: 16px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .result-count { font-size: 11px; color: var(--gray); }
+  .result-count span { color: var(--gold); }
+  .reset-btn { font-family: 'Bebas Neue', sans-serif; font-size: 9px; letter-spacing: 0.3em; color: var(--gray); background: none; border: 1px solid var(--border); padding: 4px 12px; cursor: pointer; transition: all 0.2s; }
+  .reset-btn:hover { color: var(--gold); border-color: var(--gold); }
+
+  /* JOB CARDS */
+  .jobs-section { padding: 40px 48px 120px; max-width: 1200px; margin: 0 auto; }
+  .jobs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+
+  .job-card { background: var(--dark); padding: 32px 28px; text-decoration: none; color: inherit; display: block; position: relative; overflow: hidden; transition: background 0.3s; }
+  .job-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
+  .job-card:hover { background: var(--dark2); }
+  .job-card:hover::before { transform: scaleX(1); }
+  .job-card.hidden { display: none; }
+
+  .job-header { margin-bottom: 12px; }
+  .job-company { font-family: 'Bebas Neue', sans-serif; font-size: 10px; letter-spacing: 0.3em; color: var(--gold); margin-bottom: 6px; }
+  .job-title { font-family: 'Shippori Mincho', serif; font-size: 17px; font-weight: 500; color: var(--white); line-height: 1.5; letter-spacing: 0.02em; }
+
+  .job-tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 10px 0 12px; }
+  .job-tag { font-family: 'Bebas Neue', sans-serif; font-size: 8px; letter-spacing: 0.3em; padding: 2px 7px; border: 1px solid var(--border); }
+  .job-tag.type { border-color: rgba(201,168,76,0.4); color: var(--gold); }
+  .job-tag.skill { border-color: rgba(100,160,220,0.4); color: #64A0DC; }
+  .job-tag.feature { border-color: rgba(100,200,140,0.4); color: #64C88C; }
+
+  .job-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; margin-bottom: 14px; }
+  .job-spec { font-size: 11px; color: var(--gray); display: flex; align-items: baseline; gap: 6px; }
+  .spec-label { font-family: 'Bebas Neue', sans-serif; font-size: 8px; letter-spacing: 0.2em; color: var(--gray); opacity: 0.6; white-space: nowrap; }
+  .spec-val { color: var(--white); font-size: 12px; }
+  .spec-val.salary { color: var(--gold); font-family: 'Shippori Mincho', serif; font-size: 14px; font-weight: 500; }
+
+  .job-desc { font-size: 11px; color: var(--gray); line-height: 1.9; margin-bottom: 16px; }
+  .job-footer { display: flex; justify-content: space-between; align-items: center; }
+  .job-date { font-size: 9px; color: var(--gray); letter-spacing: 0.1em; font-family: 'Bebas Neue', sans-serif; opacity: 0.6; }
+  .job-arrow { font-size: 13px; color: var(--gold); opacity: 0; transform: translateX(-5px); transition: all 0.3s; }
+  .job-card:hover .job-arrow { opacity: 1; transform: translateX(0); }
+
+  .no-results { display: none; text-align: center; padding: 80px 0; color: var(--gray); font-size: 14px; line-height: 2.4; }
+  .no-results.visible { display: block; }
+  .no-results-kanji { font-family: 'Hina Mincho', serif; font-size: 64px; color: rgba(201,168,76,0.1); margin-bottom: 16px; }
+
+  footer { background: var(--black); border-top: 1px solid var(--border); padding: 40px 48px; text-align: center; }
+  footer p { font-size: 11px; color: var(--gray); }
+  footer a { color: var(--gold); text-decoration: none; font-size: 13px; display: inline-block; margin-bottom: 16px; }
+
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    header { padding: 16px 20px; }
+    nav { display: none; }
+    .page-hero { padding: 110px 20px 60px; }
+    .filter-bar { padding: 16px 20px; top: 64px; }
+    .filter-grid { grid-template-columns: 1fr; }
+    .jobs-section { padding: 28px 20px 80px; }
+    .jobs-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<header>
+  <a href="index.html" class="logo"><span class="logo-ja">匠</span><span class="logo-en">TAKUMI JAPAN</span></a>
+  <nav>
+    <a href="articles.html">匠の技術たち</a>
+    <a href="pr.html">モノづくりを支える企業たち</a>
+    <a href="recruit.html" class="active">採用情報</a>
+    <a href="learn.html">学習コンテンツ</a>
+    <a href="english.html">製造業英語</a>
+    <a href="support.html">発信支援</a>
+    <a href="contact.html" class="header-cta">お問い合わせ</a>
+  </nav>
+</header>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-eyebrow">Recruitment</div>
+    <div class="page-kanji">人</div>
+    <h1 class="page-title">採用情報</h1>
+    <p class="page-desc">ものづくりに情熱を持つ人材と企業をつなぐ求人情報。職種・地域・年収・経験・こだわり条件で絞り込んで、あなたに合った仕事を見つける。</p>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-inner">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="職種・企業名・スキル・キーワードで検索..." autocomplete="off">
+    </div>
+
+    <div class="filter-grid">
+
+      <!-- 職種 -->
+      <div class="filter-group">
+        <div class="filter-label-row">
+          <div class="filter-label">職種</div>
+          <span class="multi-note">複数可</span>
+          <button class="tag-toggle" onclick="toggleTags('jobTypeTags',this)">＋ もっと見る</button>
+        </div>
+        <div class="tags" id="jobTypeTags">
+          <button class="tag active" data-type="jobType" data-value="all">すべて</button>
+          <button class="tag" data-type="jobType" data-value="機械設計">機械設計</button>
+          <button class="tag" data-type="jobType" data-value="電気・電子設計">電気・電子設計</button>
+          <button class="tag" data-type="jobType" data-value="生産技術">生産技術</button>
+          <button class="tag" data-type="jobType" data-value="生産管理">生産管理</button>
+          <button class="tag" data-type="jobType" data-value="品質管理・品質保証">品質管理・品質保証</button>
+          <button class="tag" data-type="jobType" data-value="設備保全">設備保全</button>
+          <button class="tag" data-type="jobType" data-value="製造オペレーター">製造オペレーター</button>
+          <button class="tag" data-type="jobType" data-value="研究・開発">研究・開発</button>
+          <button class="tag tag-extra" data-type="jobType" data-value="購買・調達">購買・調達</button>
+          <button class="tag tag-extra" data-type="jobType" data-value="営業（製造業向け）">営業（製造業向け）</button>
+          <button class="tag tag-extra" data-type="jobType" data-value="技術営業">技術営業</button>
+          <button class="tag tag-extra" data-type="jobType" data-value="CADオペレーター">CADオペレーター</button>
+          <button class="tag tag-extra" data-type="jobType" data-value="NC・CNCオペレーター">NC・CNCオペレーター</button>
+          <button class="tag tag-extra" data-type="jobType" data-value="溶接工">溶接工</button>
+          <button class="tag tag-extra" data-type="jobType" data-value="板金・プレス工">板金・プレス工</button>
+          <button class="tag tag-extra" data-type="jobType" data-value="塗装工">塗装工</button>
+          <button class="tag tag-extra" data-type="jobType" data-value="組立・検査">組立・検査</button>
+          <button class="tag tag-extra" data-type="jobType" data-value="フィールドエンジニア">フィールドエンジニア</button>
+          <button class="tag tag-extra" data-type="jobType" data-value="IoT・DXエンジニア">IoT・DXエンジニア</button>
+          <button class="tag tag-extra" data-type="jobType" data-value="工場長・マネージャー">工場長・マネージャー</button>
+          <button class="tag tag-extra" data-type="jobType" data-value="総務・人事（製造業）">総務・人事（製造業）</button>
+          <button class="tag tag-extra" data-type="jobType" data-value="経理・財務（製造業）">経理・財務（製造業）</button>
+          <button class="tag tag-extra" data-type="jobType" data-value="海外業務・通訳">海外業務・通訳</button>
+        </div>
+      </div>
+
+      <!-- 雇用形態 -->
+      <div class="filter-group">
+        <div class="filter-label-row">
+          <div class="filter-label">雇用形態</div>
+          <span class="multi-note">複数可</span>
+        </div>
+        <div class="tags" id="employTypeTags">
+          <button class="tag active" data-type="employType" data-value="all">すべて</button>
+          <button class="tag" data-type="employType" data-value="正社員">正社員</button>
+          <button class="tag" data-type="employType" data-value="契約社員">契約社員</button>
+          <button class="tag" data-type="employType" data-value="派遣">派遣</button>
+          <button class="tag" data-type="employType" data-value="パート・アルバイト">パート・アルバイト</button>
+          <button class="tag" data-type="employType" data-value="業務委託">業務委託</button>
+          <button class="tag" data-type="employType" data-value="嘱託・顧問">嘱託・顧問</button>
+        </div>
+      </div>
+
+      <!-- 想定年収 -->
+      <div class="filter-group">
+        <div class="filter-label-row">
+          <div class="filter-label">想定年収</div>
+          <span class="multi-note">複数可</span>
+        </div>
+        <div class="tags" id="salaryTags">
+          <button class="tag active" data-type="salary" data-value="all">指定なし</button>
+          <button class="tag" data-type="salary" data-value="〜300万">〜300万</button>
+          <button class="tag" data-type="salary" data-value="300〜400万">300〜400万</button>
+          <button class="tag" data-type="salary" data-value="400〜500万">400〜500万</button>
+          <button class="tag" data-type="salary" data-value="500〜600万">500〜600万</button>
+          <button class="tag" data-type="salary" data-value="600〜800万">600〜800万</button>
+          <button class="tag" data-type="salary" data-value="800〜1000万">800〜1000万</button>
+          <button class="tag" data-type="salary" data-value="1000万以上">1000万以上</button>
+        </div>
+      </div>
+
+      <!-- 経験年数 -->
+      <div class="filter-group">
+        <div class="filter-label-row">
+          <div class="filter-label">経験年数</div>
+          <span class="multi-note">複数可</span>
+        </div>
+        <div class="tags" id="expTags">
+          <button class="tag active" data-type="exp" data-value="all">指定なし</button>
+          <button class="tag" data-type="exp" data-value="未経験歓迎">未経験歓迎</button>
+          <button class="tag" data-type="exp" data-value="1年以上">1年以上</button>
+          <button class="tag" data-type="exp" data-value="3年以上">3年以上</button>
+          <button class="tag" data-type="exp" data-value="5年以上">5年以上</button>
+          <button class="tag" data-type="exp" data-value="10年以上">10年以上</button>
+        </div>
+      </div>
+
+      <!-- エリア -->
+      <div class="filter-group">
+        <div class="filter-label-row">
+          <div class="filter-label">勤務地</div>
+          <span class="multi-note">複数可</span>
+          <button class="tag-toggle" onclick="toggleTags('areaTags',this)">＋ もっと見る</button>
+        </div>
+        <div class="tags" id="areaTags">
+          <button class="tag active" data-type="area" data-value="all">すべて</button>
+          <button class="tag" data-type="area" data-value="北海道">北海道</button>
+          <button class="tag" data-type="area" data-value="東京都">東京</button>
+          <button class="tag" data-type="area" data-value="神奈川県">神奈川</button>
+          <button class="tag" data-type="area" data-value="埼玉県">埼玉</button>
+          <button class="tag" data-type="area" data-value="愛知県">愛知</button>
+          <button class="tag" data-type="area" data-value="大阪府">大阪</button>
+          <button class="tag" data-type="area" data-value="兵庫県">兵庫</button>
+          <button class="tag" data-type="area" data-value="静岡県">静岡</button>
+          <button class="tag" data-type="area" data-value="福岡県">福岡</button>
+          <button class="tag" data-type="area" data-value="宮城県">宮城</button>
+          <button class="tag tag-extra" data-type="area" data-value="青森県">青森</button>
+          <button class="tag tag-extra" data-type="area" data-value="岩手県">岩手</button>
+          <button class="tag tag-extra" data-type="area" data-value="秋田県">秋田</button>
+          <button class="tag tag-extra" data-type="area" data-value="山形県">山形</button>
+          <button class="tag tag-extra" data-type="area" data-value="福島県">福島</button>
+          <button class="tag tag-extra" data-type="area" data-value="茨城県">茨城</button>
+          <button class="tag tag-extra" data-type="area" data-value="栃木県">栃木</button>
+          <button class="tag tag-extra" data-type="area" data-value="群馬県">群馬</button>
+          <button class="tag tag-extra" data-type="area" data-value="千葉県">千葉</button>
+          <button class="tag tag-extra" data-type="area" data-value="新潟県">新潟</button>
+          <button class="tag tag-extra" data-type="area" data-value="富山県">富山</button>
+          <button class="tag tag-extra" data-type="area" data-value="石川県">石川</button>
+          <button class="tag tag-extra" data-type="area" data-value="福井県">福井</button>
+          <button class="tag tag-extra" data-type="area" data-value="山梨県">山梨</button>
+          <button class="tag tag-extra" data-type="area" data-value="長野県">長野</button>
+          <button class="tag tag-extra" data-type="area" data-value="岐阜県">岐阜</button>
+          <button class="tag tag-extra" data-type="area" data-value="三重県">三重</button>
+          <button class="tag tag-extra" data-type="area" data-value="滋賀県">滋賀</button>
+          <button class="tag tag-extra" data-type="area" data-value="京都府">京都</button>
+          <button class="tag tag-extra" data-type="area" data-value="奈良県">奈良</button>
+          <button class="tag tag-extra" data-type="area" data-value="和歌山県">和歌山</button>
+          <button class="tag tag-extra" data-type="area" data-value="鳥取県">鳥取</button>
+          <button class="tag tag-extra" data-type="area" data-value="島根県">島根</button>
+          <button class="tag tag-extra" data-type="area" data-value="岡山県">岡山</button>
+          <button class="tag tag-extra" data-type="area" data-value="広島県">広島</button>
+          <button class="tag tag-extra" data-type="area" data-value="山口県">山口</button>
+          <button class="tag tag-extra" data-type="area" data-value="徳島県">徳島</button>
+          <button class="tag tag-extra" data-type="area" data-value="香川県">香川</button>
+          <button class="tag tag-extra" data-type="area" data-value="愛媛県">愛媛</button>
+          <button class="tag tag-extra" data-type="area" data-value="高知県">高知</button>
+          <button class="tag tag-extra" data-type="area" data-value="佐賀県">佐賀</button>
+          <button class="tag tag-extra" data-type="area" data-value="長崎県">長崎</button>
+          <button class="tag tag-extra" data-type="area" data-value="熊本県">熊本</button>
+          <button class="tag tag-extra" data-type="area" data-value="大分県">大分</button>
+          <button class="tag tag-extra" data-type="area" data-value="宮崎県">宮崎</button>
+          <button class="tag tag-extra" data-type="area" data-value="鹿児島県">鹿児島</button>
+          <button class="tag tag-extra" data-type="area" data-value="沖縄県">沖縄</button>
+        </div>
+      </div>
+
+      <!-- こだわり条件 -->
+      <div class="filter-group">
+        <div class="filter-label-row">
+          <div class="filter-label">こだわり条件</div>
+          <span class="multi-note">複数可</span>
+          <button class="tag-toggle" onclick="toggleTags('featureTags',this)">＋ もっと見る</button>
+        </div>
+        <div class="tags" id="featureTags">
+          <button class="tag active" data-type="feature" data-value="all">指定なし</button>
+          <button class="tag" data-type="feature" data-value="未経験歓迎">未経験歓迎</button>
+          <button class="tag" data-type="feature" data-value="学歴不問">学歴不問</button>
+          <button class="tag" data-type="feature" data-value="転勤なし">転勤なし</button>
+          <button class="tag" data-type="feature" data-value="完全週休2日">完全週休2日</button>
+          <button class="tag" data-type="feature" data-value="年間休日120日以上">年間休日120日以上</button>
+          <button class="tag" data-type="feature" data-value="残業少なめ">残業少なめ</button>
+          <button class="tag" data-type="feature" data-value="リモート可">リモート可</button>
+          <button class="tag" data-type="feature" data-value="社宅・寮あり">社宅・寮あり</button>
+          <button class="tag tag-extra" data-type="feature" data-value="資格取得支援">資格取得支援</button>
+          <button class="tag tag-extra" data-type="feature" data-value="昇給・昇格あり">昇給・昇格あり</button>
+          <button class="tag tag-extra" data-type="feature" data-value="インセンティブあり">インセンティブあり</button>
+          <button class="tag tag-extra" data-type="feature" data-value="副業OK">副業OK</button>
+          <button class="tag tag-extra" data-type="feature" data-value="育休・産休実績あり">育休・産休実績あり</button>
+          <button class="tag tag-extra" data-type="feature" data-value="女性活躍">女性活躍</button>
+          <button class="tag tag-extra" data-type="feature" data-value="シニア歓迎">シニア歓迎</button>
+          <button class="tag tag-extra" data-type="feature" data-value="第二新卒歓迎">第二新卒歓迎</button>
+          <button class="tag tag-extra" data-type="feature" data-value="UIターン支援">UIターン支援</button>
+          <button class="tag tag-extra" data-type="feature" data-value="海外勤務あり">海外勤務あり</button>
+          <button class="tag tag-extra" data-type="feature" data-value="英語使用">英語使用</button>
+          <button class="tag tag-extra" data-type="feature" data-value="上場企業">上場企業</button>
+          <button class="tag tag-extra" data-type="feature" data-value="創業50年以上">創業50年以上</button>
+          <button class="tag tag-extra" data-type="feature" data-value="急募">急募</button>
+          <button class="tag tag-extra" data-type="feature" data-value="即日入社可">即日入社可</button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="filter-actions">
+      <div class="result-count"><span id="countNum">3</span> 件の求人</div>
+      <button class="reset-btn" onclick="resetAll()">リセット</button>
+    </div>
+  </div>
+</div>
+
+<!-- JOB LISTINGS -->
+<div class="jobs-section">
+  <div class="jobs-grid" id="jobsGrid">
+
+    <!-- ========================================================
+         ▼▼▼ 求人を追加するときはここにコピペ ▼▼▼
+         data-jobtype / data-employtype / data-salary / data-exp / data-area / data-feature
+         ======================================================== -->
+
+    <a href="#" class="job-card reveal"
+       data-jobtype="生産技術"
+       data-employtype="正社員"
+       data-salary="500〜600万"
+       data-exp="3年以上"
+       data-area="愛知県"
+       data-feature="完全週休2日,転勤なし,資格取得支援">
+      <div class="job-header">
+        <div class="job-company">株式会社 田中精機</div>
+        <div class="job-title">生産技術エンジニア｜5軸加工ライン立ち上げ担当</div>
+      </div>
+      <div class="job-tags">
+        <span class="job-tag type">正社員</span>
+        <span class="job-tag skill">生産技術</span>
+        <span class="job-tag feature">転勤なし</span>
+        <span class="job-tag feature">完全週休2日</span>
+      </div>
+      <div class="job-specs">
+        <div class="job-spec"><span class="spec-label">年収</span><span class="spec-val salary">500〜600万円</span></div>
+        <div class="job-spec"><span class="spec-label">勤務地</span><span class="spec-val">愛知県刈谷市</span></div>
+        <div class="job-spec"><span class="spec-label">経験</span><span class="spec-val">3年以上</span></div>
+        <div class="job-spec"><span class="spec-label">休日</span><span class="spec-val">完全週休2日・年125日</span></div>
+      </div>
+      <p class="job-desc">新規導入する5軸マシニングセンターの生産ライン設計から立ち上げ、工程改善まで幅広く担当。機械加工の経験者歓迎。</p>
+      <div class="job-footer"><span class="job-date">2026.05.10掲載</span><span class="job-arrow">→</span></div>
+    </a>
+
+    <a href="#" class="job-card reveal"
+       data-jobtype="品質管理・品質保証"
+       data-employtype="正社員"
+       data-salary="400〜500万"
+       data-exp="未経験歓迎"
+       data-area="大阪府"
+       data-feature="未経験歓迎,学歴不問,育休・産休実績あり,女性活躍">
+      <div class="job-header">
+        <div class="job-company">山本溶接工業 株式会社</div>
+        <div class="job-title">品質保証スタッフ｜未経験からQCのプロへ</div>
+      </div>
+      <div class="job-tags">
+        <span class="job-tag type">正社員</span>
+        <span class="job-tag skill">品質管理・品質保証</span>
+        <span class="job-tag feature">未経験歓迎</span>
+        <span class="job-tag feature">女性活躍</span>
+      </div>
+      <div class="job-specs">
+        <div class="job-spec"><span class="spec-label">年収</span><span class="spec-val salary">400〜500万円</span></div>
+        <div class="job-spec"><span class="spec-label">勤務地</span><span class="spec-val">大阪府東大阪市</span></div>
+        <div class="job-spec"><span class="spec-label">経験</span><span class="spec-val">未経験歓迎</span></div>
+        <div class="job-spec"><span class="spec-label">休日</span><span class="spec-val">土日祝・年120日</span></div>
+      </div>
+      <p class="job-desc">製品の検査・品質記録管理・不良品対応など。製造業の経験不問。丁寧な研修あり。女性社員活躍中。</p>
+      <div class="job-footer"><span class="job-date">2026.04.28掲載</span><span class="job-arrow">→</span></div>
+    </a>
+
+    <a href="#" class="job-card reveal"
+       data-jobtype="IoT・DXエンジニア"
+       data-employtype="正社員"
+       data-salary="600〜800万"
+       data-exp="5年以上"
+       data-area="東京都"
+       data-feature="リモート可,副業OK,インセンティブあり,海外勤務あり">
+      <div class="job-header">
+        <div class="job-company">テクノファクトリー株式会社</div>
+        <div class="job-title">製造業DXコンサルタント｜IoT導入支援</div>
+      </div>
+      <div class="job-tags">
+        <span class="job-tag type">正社員</span>
+        <span class="job-tag skill">IoT・DXエンジニア</span>
+        <span class="job-tag feature">リモート可</span>
+        <span class="job-tag feature">副業OK</span>
+      </div>
+      <div class="job-specs">
+        <div class="job-spec"><span class="spec-label">年収</span><span class="spec-val salary">600〜800万円</span></div>
+        <div class="job-spec"><span class="spec-label">勤務地</span><span class="spec-val">東京都港区（リモート可）</span></div>
+        <div class="job-spec"><span class="spec-label">経験</span><span class="spec-val">5年以上</span></div>
+        <div class="job-spec"><span class="spec-label">休日</span><span class="spec-val">完全週休2日・年125日</span></div>
+      </div>
+      <p class="job-desc">製造業クライアントへのIoT・DX導入支援。要件定義から導入後の効果測定まで一気通貫で担当。製造業出身者優遇。</p>
+      <div class="job-footer"><span class="job-date">2026.04.15掲載</span><span class="job-arrow">→</span></div>
+    </a>
+
+    <!-- ========================================================
+         ▲▲▲ ここまでが求人エリア ▲▲▲
+         ======================================================== -->
+
+  </div>
+  <div class="no-results" id="noResults">
+    <div class="no-results-kanji">無</div>
+    <p>該当する求人が見つかりませんでした。<br>条件を変えてお試しください。</p>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html">← 匠 TAKUMI JAPAN トップへ</a>
+  <p>© 2026 匠 TAKUMI JAPAN. All rights reserved.</p>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left=e.clientX+'px'; cursor.style.top=e.clientY+'px';
+    setTimeout(()=>{ ring.style.left=e.clientX+'px'; ring.style.top=e.clientY+'px'; },60);
+  });
+  document.querySelectorAll('a,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{ ring.style.width='44px'; ring.style.height='44px'; ring.style.borderColor='rgba(201,168,76,0.8)'; });
+    el.addEventListener('mouseleave',()=>{ ring.style.width='32px'; ring.style.height='32px'; ring.style.borderColor='rgba(201,168,76,0.5)'; });
+  });
+
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),i*60); obs.unobserve(e.target); } });
+  },{ threshold:0.05 });
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  function toggleTags(id,btn){
+    const el=document.getElementById(id);
+    const expanded=el.classList.toggle('expanded');
+    btn.textContent=expanded?'－ 閉じる':'＋ もっと見る';
+  }
+
+  // 全フィルターを複数選択Set
+  const filterSets = {
+    jobType: new Set(),
+    employType: new Set(),
+    salary: new Set(),
+    exp: new Set(),
+    area: new Set(),
+    feature: new Set()
+  };
+
+  const cards = document.querySelectorAll('.job-card');
+  const countEl = document.getElementById('countNum');
+  const noResults = document.getElementById('noResults');
+
+  function filterCards(){
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    let count = 0;
+    cards.forEach(card=>{
+      const jobType  = card.dataset.jobtype || '';
+      const empType  = card.dataset.employtype || '';
+      const salary   = card.dataset.salary || '';
+      const exp      = card.dataset.exp || '';
+      const area     = card.dataset.area || '';
+      const features = (card.dataset.feature||'').split(',').map(s=>s.trim());
+      const text     = card.textContent.toLowerCase();
+
+      const mJob  = filterSets.jobType.size===0    || filterSets.jobType.has(jobType);
+      const mEmp  = filterSets.employType.size===0 || filterSets.employType.has(empType);
+      const mSal  = filterSets.salary.size===0     || filterSets.salary.has(salary);
+      const mExp  = filterSets.exp.size===0        || filterSets.exp.has(exp);
+      const mArea = filterSets.area.size===0       || filterSets.area.has(area);
+      const mFeat = filterSets.feature.size===0    || features.some(f=>filterSets.feature.has(f));
+      const mQ    = !q || text.includes(q);
+
+      const show = mJob && mEmp && mSal && mExp && mArea && mFeat && mQ;
+      card.classList.toggle('hidden',!show);
+      if(show) count++;
+    });
+    countEl.textContent=count;
+    noResults.classList.toggle('visible',count===0);
+  }
+
+  // 各タググループをセットアップ
+  const tagGroupMap = {
+    'jobTypeTags':    'jobType',
+    'employTypeTags': 'employType',
+    'salaryTags':     'salary',
+    'expTags':        'exp',
+    'areaTags':       'area',
+    'featureTags':    'feature'
+  };
+
+  Object.entries(tagGroupMap).forEach(([containerId, setKey])=>{
+    document.getElementById(containerId).querySelectorAll('.tag').forEach(tag=>{
+      tag.addEventListener('click',()=>{
+        const val = tag.dataset.value;
+        const allBtn = document.getElementById(containerId).querySelector('[data-value="all"]');
+        const set = filterSets[setKey];
+        if(val==='all'){
+          set.clear();
+          document.getElementById(containerId).querySelectorAll('.tag').forEach(t=>t.classList.remove('active'));
+          allBtn.classList.add('active');
+        } else {
+          allBtn.classList.remove('active');
+          if(set.has(val)){ set.delete(val); tag.classList.remove('active'); }
+          else { set.add(val); tag.classList.add('active'); }
+          if(set.size===0) allBtn.classList.add('active');
+        }
+        filterCards();
+      });
+    });
+  });
+
+  document.getElementById('searchInput').addEventListener('input', filterCards);
+
+  function resetAll(){
+    Object.values(filterSets).forEach(s=>s.clear());
+    document.querySelectorAll('.tag').forEach(t=>t.classList.remove('active'));
+    Object.keys(tagGroupMap).forEach(id=>{
+      document.getElementById(id).querySelector('[data-value="all"]').classList.add('active');
+    });
+    document.getElementById('searchInput').value='';
+    filterCards();
+  }
+</script>
+</body>
+</html>
